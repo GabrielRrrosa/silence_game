@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo do silêncio</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        @font-face {
+            font-family: 'font_smw2.ttf';
+            src: url('font_smw2.ttf') format('truetype'); /* Replace 'path/to/your/local/font.ttf' with the actual path to your font file */
+        }       
+        
+        body {
+            font-family: 'font_smw2.ttf';
+            color: white; /* Set font color to white */
+            background-image: url('texture.jpg'); /* Set background image */
+            background-repeat: repeat; /* Repeat the background texture */
+        }
+
+        .title {
+            text-align: center; /* Center align title */
+            font-size: 72px;
+            
+        }
+
+        .core{
+            text-align: center; /* Center align title */
+            font-size: 72px;
+        }
+
+
+        .footer {
+            position: fixed; /* Fixed position at the bottom */
+            width: 100%; /* Full width */
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background color */
+            color: white; /* Text color */
+            padding: 10px 0; /* Padding */
+            bottom: 0; /* Stick to the bottom */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="title mt-5">
+                    <h1>JOGO DO SILENCIO</h1>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="core mt-3">
+                    <div id="dbs_level">
+                        <h1>Nível do som: </h1>
+                    </div>
+                    
+                    <!--<div id="points">
+                        <h1>Points: </h1>
+                    </div>-->
+
+                    <div id="mood">
+                        <h1>Mood: </h1></div>
+                  
+                    <div id="emoji">
+                        <img id="image" src="" alt="Image">
+                    </div>
+                    
+                    <script>
+                        // Check if the browser supports the Web Audio API and getUserMedia
+                        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                            // Function to calculate dB from audio data
+                            function calculateDb(audioData) {
+                                let sum = 0;
+                                for (let i = 0; i < audioData.length; i++) {
+                                    sum += audioData[i] ** 2;
+                                }
+                                const rms = Math.sqrt(sum / audioData.length);
+                                const db = 20 * Math.log10(rms);
+                                return db;
+                            }
+
+                            // Initialize variables
+                            let dbs_level = 0;
+                            let points = 0;
+                            let mood = "";
+
+                            // Function to update points variable
+                            function updatePoints() {
+                                if (dbs_level < -60) {
+                                    points++;
+                                    mood = "Som Baixo";
+                                } else if (dbs_level > -40) {
+                                    points--;
+                                    mood = "Som Alto";
+                                }
+                                setTimeout(updatePoints, 1000); // Call the function again after 1 second
+                                //document.getElementById('points').innerText = `Points: ${points}`;
+                                document.getElementById('mood').innerText = `Mood: ${mood}`;
+                            }                                    
+
+                            // Function to handle audio stream
+                            function handleStream(stream) {
+                                // Create an AudioContext
+                                const audioContext = new AudioContext();
+
+                                // Create a MediaStreamSource from the stream
+                                const mediaStreamSource = audioContext.createMediaStreamSource(stream);
+
+                                // Create an AnalyserNode
+                                const analyser = audioContext.createAnalyser();
+                                analyser.fftSize = 2048;
+
+                                // Connect the mediaStreamSource to the analyser
+                                mediaStreamSource.connect(analyser);
+
+                                // Create a typed array to hold audio data
+                                const audioData = new Float32Array(analyser.frequencyBinCount);
+
+                                // Function to update dB level and points
+                                function updateDbLevel() {
+                                    // Get the audio data from the analyser
+                                    analyser.getFloatTimeDomainData(audioData);
+
+                                    // Calculate dB level
+                                    dbs_level = calculateDb(audioData);
+
+                                    // Display the dB level on the screen
+                                    document.getElementById('dbs_level').innerText = `Nível do som: ${dbs_level.toFixed(2)} dB`;
+                                    
+                                    // Call the function again for continuous monitoring
+                                    requestAnimationFrame(updateDbLevel);
+                                    setTimeout(updatePoints, 6000); // Call the function again after 1 second
+                                    
+                                    // Change image based on dbs_level
+                                    if (dbs_level < -50) {
+                                        $('#image').attr('src', './emoji/sleep.webp');
+                                    } else if (dbs_level <= -40 || dbs_level <=-10) {
+                                        $('#image').attr('src', './emoji/silence.webp');
+                                    } else {
+                                        $('#image').attr('src', './emoji/noise.webp');
+                                    }
+                                }
+
+                                // Start updating the dB level
+                                updateDbLevel();
+                            }
+
+                            // Function to handle errors
+                            function handleError(error) {
+                                console.error('Error accessing microphone:', error);
+                            }
+
+                            // Request access to the microphone
+                            navigator.mediaDevices.getUserMedia({ audio: true })
+                                .then(handleStream)
+                                .catch(handleError);
+                        } else {
+                            console.error('Web Audio API or getUserMedia is not supported in your browser.');
+                        }
+                     </script>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    Desenvolvido por Gabriel R. Rosa 2024
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

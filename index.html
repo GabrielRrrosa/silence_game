@@ -154,7 +154,7 @@
                             }
 
                             // Request access to the microphone
-                            navigator.mediaDevices.getUserMedia({ audio: true })
+                            navigator.mediaDevices.getUserMedia({ audio: true }){
                                 .then(handleStream)
                                 .catch(handleError);
                         } else {

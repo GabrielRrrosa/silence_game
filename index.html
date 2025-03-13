@@ -120,7 +120,7 @@
 
                                 // Create a typed array to hold audio data
                                 const audioData = new Float32Array(analyser.frequencyBinCount);
-
+                            }
                                 // Function to update dB level and points
                                 function updateDbLevel() {
                                     // Get the audio data from the analyser
@@ -157,7 +157,8 @@
                             navigator.mediaDevices.getUserMedia({ audio: true })
                                 .then(handleStream)
                                 .catch(handleError);
-                                   }}else {
+                                   
+                        }else {
                             console.error('Web Audio API or getUserMedia is not supported in your browser.');
                         }
                      </script>

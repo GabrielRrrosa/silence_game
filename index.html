@@ -139,9 +139,9 @@
                                     // Change image based on dbs_level
                                     if (dbs_level < -35) {
                                         $('#image').attr('src', './emoji/sleep.webp');
-                                    } else if (dbs_level > -34 || dbs_level < -20) {
+                                    } else if (dbs_level < -34 || dbs_level > -21) {
                                         $('#image').attr('src', './emoji/silence.webp');
-                                    } else {
+                                    } else (dbs_level > -20) {
                                         $('#image').attr('src', './emoji/noise.webp');
                                     }
                                 }

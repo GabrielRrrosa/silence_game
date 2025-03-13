@@ -71,7 +71,7 @@
                     </div>
                     
                     <script>
-                        // Check if the browser supports the Web Audio API and getUserMedia
+                         // Check if the browser supports the Web Audio API and getUserMedia
                         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                             // Function to calculate dB from audio data
                             function calculateDb(audioData) {
@@ -91,10 +91,10 @@
 
                             // Function to update points variable
                             function updatePoints() {
-                                if (dbs_level < -30) {
+                                if (dbs_level < -60) {
                                     points++;
                                     mood = "Som Baixo";
-                                } else if (dbs_level > -20) {
+                                } else if (dbs_level > -40) {
                                     points--;
                                     mood = "Som Alto";
                                 }
@@ -120,7 +120,7 @@
 
                                 // Create a typed array to hold audio data
                                 const audioData = new Float32Array(analyser.frequencyBinCount);
-                            }
+
                                 // Function to update dB level and points
                                 function updateDbLevel() {
                                     // Get the audio data from the analyser
@@ -137,13 +137,15 @@
                                     setTimeout(updatePoints, 6000); // Call the function again after 1 second
                                     
                                     // Change image based on dbs_level
-                                   if (dbs_level < -42) {
+                                    if (dbs_level < -50) {
                                         $('#image').attr('src', './emoji/sleep.webp');
-                                    } else if (dbs_level <= -25 && dbs_level >= -41) {
+                                    } else if (dbs_level <= -40 || dbs_level <=-10) {
                                         $('#image').attr('src', './emoji/silence.webp');
-                                    } else if (dbs_level > -25) {
+                                    } else {
                                         $('#image').attr('src', './emoji/noise.webp');
                                     }
+                                }
+
                                 // Start updating the dB level
                                 updateDbLevel();
                             }
@@ -157,7 +159,9 @@
                             navigator.mediaDevices.getUserMedia({ audio: true })
                                 .then(handleStream)
                                 .catch(handleError);
-                        }               
+                        } else {
+                            console.error('Web Audio API or getUserMedia is not supported in your browser.');
+                        }
                      </script>
                 </div>
             </div>

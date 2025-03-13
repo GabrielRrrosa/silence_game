@@ -139,11 +139,15 @@
                                     // Change image based on dbs_level
                                     if (dbs_level < -35) {
                                         $('#image').attr('src', './emoji/sleep.webp');
-                                    } else if (dbs_level >= -35 && dbs_level <= -25) {
+                                    }else{
                                         $('#image').attr('src', './emoji/silence.webp');
-                                    } else if (dbs_level > -25) {
-                                        $('#image').attr('src', './emoji/noise.webp');
                                     }
+    
+                                    //else if (dbs_level >= -35 && dbs_level <= -25) {
+                                      //  $('#image').attr('src', './emoji/silence.webp');
+                                   // } else if (dbs_level > -25) {
+                                     //   $('#image').attr('src', './emoji/noise.webp');
+                                    //}
                                 }
 
                                 // Start updating the dB level
